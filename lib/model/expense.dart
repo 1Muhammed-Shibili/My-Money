@@ -3,17 +3,21 @@ import 'package:hive/hive.dart';
 part 'expense.g.dart';
 
 @HiveType(typeId: 0)
-class Expense {
+class Expense extends HiveObject {
   @HiveField(0)
-  final String description;
+  String id;
 
   @HiveField(1)
-  final double amount;
+  String description;
 
   @HiveField(2)
-  final DateTime date;
+  double amount;
+
+  @HiveField(3)
+  DateTime date;
 
   Expense({
+    required this.id,
     required this.description,
     required this.amount,
     required this.date,

@@ -16,8 +16,12 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.attach_money, size: 85, color: Colors.white),
-            SizedBox(height: 20),
+            Text(
+              style:
+                  GoogleFonts.dancingScript(fontSize: 85, color: Colors.white),
+              r"$",
+            ),
+            const SizedBox(height: 20),
             Text(
               'My Money',
               style: GoogleFonts.luckiestGuy(

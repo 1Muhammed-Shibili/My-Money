@@ -5,6 +5,8 @@ import 'package:my_money/controller/expense_controller.dart';
 import 'package:my_money/model/expense.dart';
 
 class AddExpenseDialog extends StatefulWidget {
+  const AddExpenseDialog({super.key});
+
   @override
   _AddExpenseDialogState createState() => _AddExpenseDialogState();
 }
@@ -42,16 +44,6 @@ class _AddExpenseDialogState extends State<AddExpenseDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Add Expense',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 24),
                 TextFormField(
                   controller: _descriptionController,
                   decoration: InputDecoration(
@@ -77,7 +69,7 @@ class _AddExpenseDialogState extends State<AddExpenseDialog> {
                   validator: (value) =>
                       value == null || value.trim().isEmpty ? 'Required' : null,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: _amountController,
                   decoration: InputDecoration(
@@ -167,6 +159,7 @@ class _AddExpenseDialogState extends State<AddExpenseDialog> {
                     if (_formKey.currentState!.validate()) {
                       expenseController.addExpense(
                         Expense(
+                          id: '',
                           description: _descriptionController.text,
                           amount: double.parse(_amountController.text),
                           date: _selectedDate,

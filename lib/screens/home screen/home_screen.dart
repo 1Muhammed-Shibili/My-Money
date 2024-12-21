@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:my_money/controller/expense_controller.dart';
-import 'package:my_money/screens/home%20screen/widgets/add_expense_dialog.dart';
+import 'package:my_money/screens/home%20screen/widgets/expense_card.dart';
+import 'package:my_money/screens/home%20screen/widgets/floating_action_buttons.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -58,9 +59,38 @@ class HomeScreen extends StatelessWidget {
                   ],
                 )),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Obx(() => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton.icon(
+                      onPressed: () => expenseController.pickDate(context),
+                      icon:
+                          const Icon(Icons.calendar_today, color: Colors.blue),
+                      label: Text(
+                        expenseController.selectedDate.value != null
+                            ? DateFormat('MMM dd, yyyy')
+                                .format(expenseController.selectedDate.value!)
+                            : 'Select Date',
+                        style: const TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => expenseController.clearFilter(),
+                      child: const Text(
+                        'Clear Filter',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ],
+                )),
+          ),
           Expanded(
             child: Obx(() {
-              if (expenseController.expenses.isEmpty) {
+              final groupedExpenses = expenseController.groupedExpensesByDate;
+
+              if (groupedExpenses.isEmpty) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -82,99 +112,45 @@ class HomeScreen extends StatelessWidget {
                   ),
                 );
               }
-              return ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: expenseController.expenses.length,
-                itemBuilder: (context, index) {
-                  final expense = expenseController.expenses[index];
-                  return Dismissible(
-                    key: UniqueKey(),
-                    direction: DismissDirection.endToStart,
-                    background: Container(
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.red[400],
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: const Icon(
-                        Icons.delete_outline,
-                        color: Colors.white,
-                      ),
-                    ),
-                    onDismissed: (direction) {
-                      expenseController.deleteExpense(index);
-                    },
-                    child: Card(
-                      elevation: 2,
-                      margin: const EdgeInsets.only(bottom: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
-                        ),
-                        title: Text(
-                          expense.description,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        subtitle: Text(
-                          DateFormat('MMM dd, yyyy').format(expense.date),
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              '\$${NumberFormat('#,##0.00').format(expense.amount)}',
-                              style: TextStyle(
-                                color: Colors.blue[700],
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
-                            Text(
-                              'Swipe to delete',
-                              style: TextStyle(
-                                color: Colors.grey[400],
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
+              return ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                children: groupedExpenses.entries.map((entry) {
+                  final date = entry.key;
+                  final expenses = entry.value;
+                  final formattedDate =
+                      expenseController.formatFriendlyDate(date);
+                  final subtotal =
+                      expenses.fold<double>(0, (sum, e) => sum + e.amount);
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        formattedDate,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 8),
+                      ...expenses.map(
+                        (expense) {
+                          return ExpenseCard(
+                            subtotal: subtotal,
+                            expense: expense,
+                            index: expenses.indexOf(expense),
+                          );
+                        },
+                      )
+                    ],
                   );
-                },
+                }).toList(),
               );
             }),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showAddExpenseDialog(context),
-        backgroundColor: Colors.blue[700],
-        icon: const Icon(
-          Icons.add_circle_outline,
-          color: Colors.white,
-        ),
-        label: const Text(
-          'Add Expense',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
+      floatingActionButton: FloatingActionButtons(),
     );
-  }
-
-  void _showAddExpenseDialog(BuildContext context) {
-    Get.dialog(AddExpenseDialog());
   }
 }

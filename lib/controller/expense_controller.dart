@@ -1,19 +1,47 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:my_money/model/expense.dart';
+import 'package:my_money/screens/home%20screen/widgets/add_expense_dialog.dart';
+import 'package:my_money/screens/home%20screen/widgets/edit_expense.dart';
 
 class ExpenseController extends GetxController {
   var expenses = <Expense>[].obs;
   late Box<Expense> expenseBox;
 
   final Rx<DateTime?> selectedDate = Rx<DateTime?>(null);
+  var filteredExpenses = <Expense>[].obs;
 
-  List<Expense> get filteredExpenses {
-    if (selectedDate.value == null) return expenses;
+  Map<DateTime, List<Expense>> get groupedExpensesByDate {
+    final Map<DateTime, List<Expense>> grouped = {};
+    for (var expense in filteredExpenses) {
+      final date =
+          DateTime(expense.date.year, expense.date.month, expense.date.day);
+      if (!grouped.containsKey(date)) {
+        grouped[date] = [];
+      }
+      grouped[date]!.add(expense);
+    }
+    return grouped;
+  }
+
+// Get weekly expenses
+  List<Expense> getWeeklyExpenses() {
+    final now = DateTime.now();
+    final lastWeek = now.subtract(const Duration(days: 7));
+
     return expenses.where((expense) {
-      return DateFormat('yyyy-MM-dd').format(expense.date) ==
-          DateFormat('yyyy-MM-dd').format(selectedDate.value!);
+      return expense.date.isAfter(lastWeek) && expense.date.isBefore(now);
+    }).toList();
+  }
+
+  List<Expense> getMonthlyExpenses() {
+    final now = DateTime.now();
+    final lastWeek = now.subtract(const Duration(days: 30));
+
+    return expenses.where((expense) {
+      return expense.date.isAfter(lastWeek) && expense.date.isBefore(now);
     }).toList();
   }
 
@@ -28,8 +56,28 @@ class ExpenseController extends GetxController {
     } else if (amount >= 1000) {
       return '${(amount / 1000).toStringAsFixed(1)}K';
     } else {
-      return amount.toStringAsFixed(2);
+      return NumberFormat('#,##0.#############').format(amount);
     }
+  }
+
+  String formatFriendlyDate(DateTime date) {
+    final today = DateTime.now();
+    final difference = today.difference(date).inDays;
+
+    if (difference == 0) return 'Today';
+    if (difference == 1) return 'Yesterday';
+    if (difference == 2) return 'Day Before Yesterday';
+
+    return DateFormat('dd-MM-yyyy').format(date);
+  }
+
+  void filterByDate(DateTime date) {
+    selectedDate.value = date;
+    filteredExpenses.value = expenses.where((expense) {
+      return DateTime(
+              expense.date.year, expense.date.month, expense.date.day) ==
+          DateTime(date.year, date.month, date.day);
+    }).toList();
   }
 
   @override
@@ -41,11 +89,43 @@ class ExpenseController extends GetxController {
 
   void loadExpenses() {
     expenses.value = expenseBox.values.toList();
+    filteredExpenses.value = expenses;
+  }
+
+  Future<void> refreshData() async {
+    // Simulate delay if needed for asynchronous operations
+    await Future.delayed(Duration(seconds: 1));
+    loadExpenses(); // Re-fetch and update expenses
+  }
+
+  void clearFilter() {
+    selectedDate.value = null;
+    filteredExpenses.value = expenses;
   }
 
   void addExpense(Expense expense) {
-    expenseBox.add(expense);
+    final newExpense = Expense(
+      id: DateTime.now().toIso8601String(),
+      description: expense.description,
+      amount: expense.amount,
+      date: expense.date,
+    );
+    expenseBox.add(newExpense);
     loadExpenses();
+  }
+
+  void editExpense(String id, Expense updatedExpense) {
+    final index = expenses.indexWhere((expense) => expense.id == id);
+    if (index != -1) {
+      final editedExpense = Expense(
+        id: id,
+        description: updatedExpense.description,
+        amount: updatedExpense.amount,
+        date: updatedExpense.date,
+      );
+      expenseBox.putAt(index, editedExpense);
+      loadExpenses();
+    }
   }
 
   void deleteExpense(int index) {
@@ -53,7 +133,45 @@ class ExpenseController extends GetxController {
     loadExpenses();
   }
 
-  void setDateFilter(DateTime? date) {
-    selectedDate.value = date;
+  void deleteExpenseById(String id) {
+    final index = expenses.indexWhere((expense) => expense.id == id);
+    if (index != -1) {
+      expenseBox.deleteAt(index);
+      loadExpenses();
+    }
+  }
+
+  void showAddExpenseDialog() {
+    // ignore: prefer_const_constructors
+    Get.dialog(AddExpenseDialog());
+  }
+
+  void showEditExpenseDialog(Expense expense) {
+    Get.dialog(EditExpenseDialog(expense: expense));
+  }
+
+  void pickDate(BuildContext context) async {
+    final selected = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: Colors.blue[400]!,
+              onPrimary: Colors.white,
+              surface: Colors.blue[700]!,
+              onSurface: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (selected != null) {
+      filterByDate(selected);
+    }
   }
 }

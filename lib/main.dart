@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:my_money/config/routes.dart';
+// import 'package:my_money/controller/notification_controller.dart';
 import 'package:my_money/model/expense.dart';
 
 void main() async {
@@ -9,6 +10,10 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(ExpenseAdapter());
   await Hive.openBox<Expense>('expenses');
+
+  // await NotificationController.initializeNotifications(
+  //     flutterLocalNotificationsPlugin);
+
   runApp(const MyApp());
 }
 
