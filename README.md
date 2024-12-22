@@ -26,7 +26,7 @@ Implemented local notifications using Flutter Local Notifications to send daily 
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/1Muhammed_Shibili/personal-My-Money.git
+   git clone https://github.com/1Muhammed_Shibili/My-Money.git
    cd My-Money
    ```
 
