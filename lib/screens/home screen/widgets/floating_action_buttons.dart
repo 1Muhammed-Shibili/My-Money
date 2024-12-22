@@ -23,7 +23,7 @@ class FloatingActionButtons extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        const SizedBox(width: 5), // Add a 5-pixel gap
+        const SizedBox(width: 5),
         FloatingActionButton.extended(
           heroTag: 'addExpenseButton',
           onPressed: expenseController.showAddExpenseDialog,

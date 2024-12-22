@@ -45,5 +45,14 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This app uses notifications to remind you about daily expenses.</string>
+	<key>NSPushNotificationsUsageDescription</key>
+	<string>This app needs to send reminders for recording your expenses.</string>
 </dict>
 </plist>

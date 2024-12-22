@@ -26,7 +26,6 @@ class ExpenseController extends GetxController {
     return grouped;
   }
 
-// Get weekly expenses
   List<Expense> getWeeklyExpenses() {
     final now = DateTime.now();
     final lastWeek = now.subtract(const Duration(days: 7));
@@ -93,9 +92,8 @@ class ExpenseController extends GetxController {
   }
 
   Future<void> refreshData() async {
-    // Simulate delay if needed for asynchronous operations
     await Future.delayed(Duration(seconds: 1));
-    loadExpenses(); // Re-fetch and update expenses
+    loadExpenses();
   }
 
   void clearFilter() {
@@ -142,7 +140,6 @@ class ExpenseController extends GetxController {
   }
 
   void showAddExpenseDialog() {
-    // ignore: prefer_const_constructors
     Get.dialog(AddExpenseDialog());
   }
 

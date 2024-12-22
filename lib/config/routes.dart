@@ -12,6 +12,5 @@ class AppRoutes {
     GetPage(name: '/splash', page: () => const SplashScreen()),
     GetPage(name: '/home', page: () => HomeScreen()),
     GetPage(name: '/summary', page: () => SummaryScreen()),
-    // GetPage(name: '/summary', page: () => ),
   ];
 }

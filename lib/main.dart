@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:my_money/config/routes.dart';
-// import 'package:my_money/controller/notification_controller.dart';
-import 'package:my_money/model/expense.dart';
+import 'package:my_money/controller/main_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
-  Hive.registerAdapter(ExpenseAdapter());
-  await Hive.openBox<Expense>('expenses');
 
-  // await NotificationController.initializeNotifications(
-  //     flutterLocalNotificationsPlugin);
+  final mainController = Get.put(MainController());
+  await mainController.initializeApp();
 
   runApp(const MyApp());
 }
