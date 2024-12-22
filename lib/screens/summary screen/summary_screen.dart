@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:my_money/controller/expense_controller.dart';
 import 'package:my_money/model/expense.dart';
 import 'package:my_money/screens/summary%20screen/widgets/monthly_card.dart';
@@ -43,7 +42,8 @@ class SummaryScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           'Expense Summary',
-          style: GoogleFonts.acme(
+          style: TextStyle(
+            fontFamily: 'Acme',
             color: Colors.blue[700],
             fontSize: 21,
             letterSpacing: 1.5,

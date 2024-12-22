@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:my_money/controller/expense_controller.dart';
 import 'package:my_money/screens/home%20screen/widgets/expense_card.dart';
@@ -18,9 +17,10 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.blue[700],
-        title: Text(
+        title: const Text(
           'My Money',
-          style: GoogleFonts.luckiestGuy(
+          style: TextStyle(
+            fontFamily: 'LuckiestGuy',
             color: Colors.white,
             fontSize: 28,
             letterSpacing: 1.5,

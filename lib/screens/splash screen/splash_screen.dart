@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:my_money/controller/splash_controller.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -12,19 +11,22 @@ class SplashScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.blue[700],
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              style:
-                  GoogleFonts.dancingScript(fontSize: 85, color: Colors.white),
+              style: TextStyle(
+                  fontSize: 85,
+                  color: Colors.white,
+                  fontFamily: 'DancingScript'),
               r"$",
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
               'My Money',
-              style: GoogleFonts.luckiestGuy(
+              style: TextStyle(
+                fontFamily: 'LuckiestGuy',
                 fontSize: 48,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,

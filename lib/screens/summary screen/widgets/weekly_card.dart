@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 Widget buildWeeklyCard(List<double> weeklyData) {
@@ -26,9 +25,10 @@ Widget buildWeeklyCard(List<double> weeklyData) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Weekly Total',
-          style: GoogleFonts.acme(
+          style: TextStyle(
+            fontFamily: 'Acme',
             color: Colors.white70,
             fontSize: 16,
           ),
@@ -36,7 +36,8 @@ Widget buildWeeklyCard(List<double> weeklyData) {
         const SizedBox(height: 8),
         Text(
           '\$${NumberFormat('#,##0.00').format(total)}',
-          style: GoogleFonts.acme(
+          style: const TextStyle(
+            fontFamily: 'Acme',
             color: Colors.white,
             fontSize: 32,
             fontWeight: FontWeight.bold,
