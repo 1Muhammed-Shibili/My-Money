@@ -92,7 +92,7 @@ class ExpenseController extends GetxController {
   }
 
   Future<void> refreshData() async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     loadExpenses();
   }
 
@@ -140,7 +140,7 @@ class ExpenseController extends GetxController {
   }
 
   void showAddExpenseDialog() {
-    Get.dialog(AddExpenseDialog());
+    Get.dialog(const AddExpenseDialog());
   }
 
   void showEditExpenseDialog(Expense expense) {
